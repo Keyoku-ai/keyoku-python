@@ -1,0 +1,75 @@
+[project]
+name = "keyoku"
+version = "0.1.0"
+description = "Python SDK for Keyoku - AI Memory Infrastructure"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [
+    { name = "Keyoku", email = "support@keyoku.dev" }
+]
+keywords = ["ai", "memory", "agents", "langchain", "llm", "rag"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "httpx>=0.25.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+langchain = ["langchain>=0.1.0", "langchain-core>=0.1.0"]
+langgraph = ["langgraph>=0.0.1"]
+llamaindex = ["llama-index>=0.10.0"]
+crewai = ["crewai>=0.1.0"]
+openai = ["openai>=1.0.0"]
+anthropic = ["anthropic>=0.18.0"]
+autogen = ["pyautogen>=0.2.0"]
+pydantic-ai = ["pydantic-ai>=0.0.1"]
+all = [
+    "keyoku[langchain,langgraph,llamaindex,crewai,openai,anthropic]"
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "respx>=0.20.0",
+]
+
+[project.urls]
+Homepage = "https://keyoku.dev"
+Documentation = "https://docs.keyoku.dev"
+Repository = "https://github.com/keyoku/keyoku-python"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/keyoku"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
