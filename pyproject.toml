@@ -73,3 +73,8 @@ strict = true
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+markers = [
+    "unit: Mocked HTTP tests (run by default)",
+    "integration: Real API tests (requires running Keyoku API)",
+    "framework: Framework integration tests (requires framework dependencies)",
+]
