@@ -31,6 +31,9 @@ from keyoku.resources.relationships import RelationshipsResource
 from keyoku.resources.graph import GraphResource
 from keyoku.resources.schemas import SchemasResource
 from keyoku.resources.jobs import JobsResource
+from keyoku.resources.cleanup import CleanupResource
+from keyoku.resources.data import DataResource
+from keyoku.resources.audit import AuditResource
 
 
 DEFAULT_BASE_URL = "https://api.keyoku.dev"
@@ -89,6 +92,9 @@ class Keyoku:
         self.graph = GraphResource(self)
         self.schemas = SchemasResource(self)
         self.jobs = JobsResource(self)
+        self.cleanup = CleanupResource(self)
+        self.data = DataResource(self)
+        self.audit = AuditResource(self)
 
     def _default_headers(self) -> dict[str, str]:
         headers = {
@@ -102,7 +108,7 @@ class Keyoku:
 
     def _handle_response(self, response: httpx.Response) -> Any:
         """Handle API response and raise appropriate exceptions."""
-        if response.status_code == 200 or response.status_code == 201:
+        if response.status_code in (200, 201, 204):
             return response.json() if response.content else None
 
         try:
@@ -136,6 +142,7 @@ class Keyoku:
         *,
         json: Optional[dict[str, Any]] = None,
         params: Optional[dict[str, Any]] = None,
+        headers: Optional[dict[str, str]] = None,
     ) -> Any:
         """Make an API request."""
         response = self._client.request(
@@ -143,6 +150,7 @@ class Keyoku:
             path,
             json=json,
             params=params,
+            headers=headers,
         )
         return self._handle_response(response)
 

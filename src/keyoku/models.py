@@ -68,19 +68,19 @@ class RememberResponse(BaseModel):
 class Entity(BaseModel):
     """An entity in the knowledge graph."""
     id: str
-    name: str
+    canonical_name: str
     type: str
     properties: dict[str, Any] = Field(default_factory=dict)
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
 
 
 class Relationship(BaseModel):
     """A relationship between entities."""
     id: str
-    source_id: str
-    target_id: str
-    type: str
+    source_entity_id: str
+    target_entity_id: str
+    relationship_type: str
     properties: dict[str, Any] = Field(default_factory=dict)
     created_at: datetime
 
@@ -105,3 +105,60 @@ class Schema(BaseModel):
     schema_def: dict[str, Any] = Field(alias="schema")
     created_at: datetime
     updated_at: datetime
+
+
+class CleanupStrategy(str, Enum):
+    """Memory cleanup strategies."""
+    STALE = "stale"
+    LOW_IMPORTANCE = "low_importance"
+    OLDEST = "oldest"
+    NEVER_ACCESSED = "never_accessed"
+
+
+class CleanupSuggestion(BaseModel):
+    """A cleanup suggestion."""
+    strategy: str
+    description: str
+    count: int
+
+
+class CleanupUsage(BaseModel):
+    """Current memory usage info."""
+    memories_stored: int
+    memories_limit: int
+    percentage: int
+
+
+class CleanupSuggestionsResponse(BaseModel):
+    """Response from cleanup suggestions."""
+    suggestions: list[CleanupSuggestion]
+    usage: CleanupUsage
+
+
+class CleanupResponse(BaseModel):
+    """Response from cleanup execution."""
+    deleted_count: int
+    deleted_ids: Optional[list[str]] = None
+
+
+class ExportResponse(BaseModel):
+    """Response from export request."""
+    job_id: str
+    status: str
+
+
+class AuditLog(BaseModel):
+    """An audit log entry."""
+    id: str
+    operation: str
+    resource_type: str
+    resource_id: Optional[str] = None
+    details: Optional[dict[str, Any]] = None
+    created_at: datetime
+
+
+class AuditLogsResponse(BaseModel):
+    """Response from audit logs query."""
+    audit_logs: list[AuditLog]
+    total: int
+    has_more: bool

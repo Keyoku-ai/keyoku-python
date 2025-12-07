@@ -62,7 +62,11 @@ class MemoriesResource:
 
     def delete_all(self) -> None:
         """Delete all memories for the current entity."""
-        self._client.request("DELETE", "/v1/memories")
+        self._client.request(
+            "DELETE",
+            "/v1/memories",
+            headers={"X-Confirm-Delete": "true"},
+        )
 
     def batch_create(
         self,
